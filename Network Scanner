@@ -1,0 +1,58 @@
+#Sorry, there is no explaination it just learning phase
+import subprocess
+import socket
+from contextlib import closing
+
+def ping_sweep(network):
+    alive_host = []
+    for i in range(1,255):
+        ip = f"{network}{i}"
+        result = subprocess.run(["ping","-c","1","-w","0.25",ip],stdout=subprocess.DEVNULL)
+        if result.returncode == 0:
+            print(f"[+] Host {ip} is up")
+            alive_host.append(ip)
+    print(f"\n Alive Hosts: {alive_host}")
+def scan_port(ip, port,timeout=0.5):
+    with closing(socket.socket(socket.AF_INET,socket.SOCK_STREAM)) as  sock:
+        sock.settimeout(timeout)
+        try:
+            sock.connect((ip,port))
+            print(f"[+] Scan {ip}:{port} is up")
+        except (socket.timeout,ConnectionRefusedError,OSError):
+            print(f"[-] Scan {ip}:{port} is down")
+def Nmap_for_bannergraber(ip):
+    cmd = ['nmap',ip,'-A','-F','-Pn']
+    result = subprocess.run(cmd,capture_output=True,text=True)
+    if result.returncode == 0:
+        print(f"[+] Nmap scan for {ip} is up")
+        print(f"\n{result.stdout}")
+    else:
+        print(f"[-] Nmap scan for {ip} is down")
+        print(f"\n {result.stderr}")
+while True:
+    try:
+        print("Welcome to Network Scanner")
+        print("0 - ping_sweep")
+        print("1 - scan_port")
+        print("2 - BannerGrabber")
+        print("4 - Exit")
+        choice = int(input("Enter your choice: "))
+        if choice == 0:
+            net = input("Enter the network: ")
+            ping_sweep(net)
+        elif choice == 1:
+            ip = input("Enter the IP address: ")
+            num = int(input("Enter the number of ports: "))
+            port = []
+            for i in range(num):
+                port.append(int(input(f"Enter the {i+1} port: ")))
+            for i in port :
+                scan_port(ip,i)
+        elif choice == 2:
+            ip = input("Enter the IP address: ")
+            Nmap_for_bannergraber(ip)
+        elif choice == 4:
+            print("Thank you for using Network Scanner")
+            break
+    except ValueError:
+        print("Invalid choice")
