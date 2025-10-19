@@ -1,0 +1,87 @@
+#Sorry there is no comment , you have understand it by user self
+import base64
+
+def Encryption_Caesar(str,shift):
+    result = ""
+    for char in str:
+        if char.isalpha():
+            if char.isupper():
+                base = ord('A')
+            else:
+                base = ord('a')
+            result += chr((ord(char) - base + shift)%26 + base)
+        else:
+            result += char
+    return result
+
+def Decryption_Caesar(str,shift):
+    return Encryption_Caesar(str,-shift)
+
+
+def XOR_encrypt(str,key):
+    result = ""
+    key_len = len(key)
+    for i in range(len(str)):
+        result += chr(ord(str[i]) ^ ord(key[ i % key_len ]))
+    return result
+
+print("Welcome to Cyber Tool")
+while True:
+    print("0 - Caesar Cipher")
+    print("1 - ROT13")
+    print("2 - Base64")
+    print("3 - XOR")
+    print("4 - file Input")
+    print("6 - exit")
+    choice = int(input("Enter your choice: "))
+    code = input("Enter 'd' for decryption: "
+                 "or 'e' for encryption: ")
+    str = input("Enter your plaintext: ")
+    if choice == 0:
+        shift = int(input("Enter your shift: "))
+        if code.lower() == "d":
+            result = Decryption_Caesar(str,shift)
+            print(f"Your decrypted text is: {result}")
+        elif code.lower() == "e":
+            result = Encryption_Caesar(str,shift)
+            print(f"Your encrypted text is: {result}")
+        else:
+            print("Invalid choice")
+    elif choice == 1:
+
+        shift = 13
+        if code.lower() == "d":
+            result = Decryption_Caesar(str,shift)
+            print(f"Your decrypted text is: {result}")
+        elif code.lower() == "e":
+            result = Encryption_Caesar(str,shift)
+            print(f"Your encrypted text is: {result}")
+        else:
+            print("Invalid choice")
+    elif choice == 2:
+        if code.lower() == "d":
+            decrypted = base64.b64decode(str.encode('UTF-8')).decode('UTF-8')
+            print(f"Your decrypted text is: {decrypted}")
+        elif code.lower() == "e":
+            encrypted = base64.b64encode(str.encode('UTF-8')).decode('UTF-8')
+            print(f"Your encrypted text is: {encrypted}")
+        else:
+            print("Invalid choice")
+    elif choice == 3:
+        if code.lower() == "d":
+            key = input("Enter your key: ")
+            res = XOR_encrypt(str,key)
+            print(f"Your encrypted text is: {res}")
+        elif code.lower() == "e":
+            key = input("Enter your key: ")
+            res = XOR_encrypt(str,key)
+            print(f"Your encrypted text is: {res}")
+        else:
+            print("Invalid choice")
+    elif choice == 4:
+        file_path = input("Enter file path: ")
+        data = open(file_path,"r").read()
+
+    elif choice == 6:
+        print("Thank you for using Cyber Tool")
+        break
